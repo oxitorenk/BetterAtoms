@@ -21,10 +21,7 @@ namespace UnityAtoms.Editor
 
         private void Reset()
         {
-            for(int i = 0; i < AtomTypes.ALL_ATOM_TYPES.Count; i++)
-            {
-                GenerationOptions |= (1 << i);
-            }
+            GenerationOptions = 0;
         }
 
         public void Generate()
