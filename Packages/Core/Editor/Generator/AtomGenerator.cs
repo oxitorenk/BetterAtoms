@@ -11,6 +11,8 @@ namespace UnityAtoms.Editor
     public class AtomGenerator : ScriptableObject
     {
         [TextArea] public string FullQualifiedName;
+        [Tooltip("Namespace for generated types. Leave empty to use UnityAtoms.BaseAtoms. Editor types use the .Editor suffix.")]
+        public string GeneratedNamespace;
         public string Namespace => string.IsNullOrWhiteSpace(FullQualifiedName) ? "" : Type.GetType(FullQualifiedName)?.Namespace;
         public string BaseType => string.IsNullOrWhiteSpace(FullQualifiedName) ? "" : Type.GetType(FullQualifiedName)?.Name;
 
@@ -26,13 +28,22 @@ namespace UnityAtoms.Editor
 
         public void Generate()
         {
+            var generatedNamespace = GeneratedNamespace?.Trim();
+            if (!string.IsNullOrEmpty(generatedNamespace))
+            {
+                using (var provider = System.CodeDom.Compiler.CodeDomProvider.CreateProvider("CSharp"))
+                {
+                    if (generatedNamespace.Split('.').Any(part => !provider.IsValidIdentifier(part)))
+                        throw new ArgumentException("Enter a valid C# namespace.", nameof(GeneratedNamespace));
+                }
+            }
             var type = Type.GetType($"{FullQualifiedName}");
             if (type == null) throw new TypeLoadException($"Type could not be found ({FullQualifiedName})");
             var isValueTypeEquatable = typeof(IEquatable<>).MakeGenericType(type).IsAssignableFrom(type);
 
             var baseTypeAccordingNested = type.FullName.Replace('+', '.');
 
-            var templateVariables = Generator.CreateTemplateVariablesMap(baseTypeAccordingNested, Namespace, "BaseAtoms");
+            var templateVariables = Generator.CreateTemplateVariablesMap(baseTypeAccordingNested, Namespace, "BaseAtoms", generatedNamespace);
             var capitalizedValueType = BaseType.Capitalize();
             var templates = Generator.GetTemplatePaths();
 

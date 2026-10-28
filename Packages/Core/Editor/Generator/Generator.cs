@@ -35,9 +35,12 @@ namespace UnityAtoms.Editor
             return templateConditions;
         }
 
-        public static Dictionary<string, string> CreateTemplateVariablesMap(string valueType, string valueTypeNamespace, string subUnityAtomsNamespace)
+        public static Dictionary<string, string> CreateTemplateVariablesMap(string valueType, string valueTypeNamespace, string subUnityAtomsNamespace, string generatedNamespace = null)
         {
             var templateVariables = new Dictionary<string, string>() {
+                { "ATOM_NAMESPACE", string.IsNullOrWhiteSpace(generatedNamespace)
+                    ? "UnityAtoms" + (string.IsNullOrEmpty(subUnityAtomsNamespace) ? "" : "." + subUnityAtomsNamespace)
+                    : generatedNamespace.Trim() },
                 { "VALUE_TYPE_NAME", valueType.Replace('.', '_').Capitalize() },
                 { "VALUE_TYPE", valueType },
                 { "VALUE_TYPE_NAME_NO_PAIR", valueType.Contains("Pair") ? valueType.Capitalize().Remove(valueType.IndexOf("Pair")) : valueType.Capitalize() }

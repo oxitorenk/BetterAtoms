@@ -1,12 +1,9 @@
+using UnityAtoms;
 using UnityEditor;
 using UnityAtoms.Editor;
 <%IF TYPE_HAS_NAMESPACE%>using {TYPE_NAMESPACE};<%ENDIF%>
 
-<%IF HAS_SUB_UA_NAMESPACE%>
-namespace UnityAtoms.{SUB_UA_NAMESPACE}.Editor
-<%ELSE%>
-namespace UnityAtoms.Editor
-<%ENDIF%>
+namespace {ATOM_NAMESPACE}.Editor
 {
     /// <summary>
     /// Variable Inspector of type `{VALUE_TYPE}`. Inherits from `AtomVariableEditor`

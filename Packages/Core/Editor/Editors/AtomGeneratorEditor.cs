@@ -16,6 +16,7 @@ namespace UnityAtoms.Editor
         private TypeSelectorDropdown typeSelectorDropdown;
 
         private SerializedProperty fullQualifiedName;
+        private SerializedProperty generatedNamespace;
         private SerializedProperty generatedOptions;
 
         private static bool safeSearch = true;
@@ -24,6 +25,7 @@ namespace UnityAtoms.Editor
         {
             // Find Properties.
             fullQualifiedName = serializedObject.FindProperty(nameof(AtomGenerator.FullQualifiedName));
+            generatedNamespace = serializedObject.FindProperty(nameof(AtomGenerator.GeneratedNamespace));
             generatedOptions = serializedObject.FindProperty(nameof(AtomGenerator.GenerationOptions));
 
             // Check if the current type is unsafe.
@@ -121,6 +123,7 @@ namespace UnityAtoms.Editor
             }
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.PropertyField(fullQualifiedName);
+            EditorGUILayout.PropertyField(generatedNamespace, new GUIContent("Namespace"));
 
             // Draw the different generator options and if a file has been generated, draw it in a disabled objectfield as well.
             EditorGUILayout.Space(EditorGUIUtility.singleLineHeight);
