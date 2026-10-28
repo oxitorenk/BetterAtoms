@@ -42,15 +42,10 @@ sysinfo.txt
 # Node
 node_modules
 
-# Website build folder
-/website/build
-
 .DS_Store
 
 # Ignore unnecessary .meta files created when used as a git submodule
-/docs/**/*.meta
 /scripts/**/*.meta
-/website/**/*.meta
 /*.meta
 
 # Ignore Examples directory if used
