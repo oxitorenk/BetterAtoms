@@ -33,7 +33,7 @@ namespace UnityAtoms
         [SerializeField]
         [Range(0, 10)]
         [Tooltip("The number of old values (between 0-10) being replayed when someone subscribes to this Event.")]
-        private int _replayBufferSize = 1;
+        private int _replayBufferSize = 0;
 
         private Queue<T> _replayBuffer = new Queue<T>();
 
@@ -121,12 +121,12 @@ namespace UnityAtoms
         /// Register handler to be called when the Event triggers.
         /// </summary>
         /// <remarks>
-        /// Replays the event buffer to the handler.
+        /// Does not replay the event buffer to the handler.
         /// </remarks>
         /// <param name="action">The handler.</param>
         public void Register(Action<T> action)
         {
-            Register(action, replayEventsBuffer: true);
+            Register(action, replayEventsBuffer: false);
         }
 
         /// <summary>
@@ -165,8 +165,8 @@ namespace UnityAtoms
         /// Register a Listener that in turn trigger all its associated handlers when the Event triggers.
         /// </summary>
         /// <param name="listener">The Listener to register.</param>
-        /// <param name="replayEventsBuffer">If this replays the events buffer to the new listener. Defaults to true.</param>
-        public void RegisterListener(IAtomListener<T> listener, bool replayEventsBuffer = true)
+        /// <param name="replayEventsBuffer">If this replays the events buffer to the new listener. Defaults to false.</param>
+        public void RegisterListener(IAtomListener<T> listener, bool replayEventsBuffer = false)
         {
             _onEvent += listener.OnEventRaised;
             if (replayEventsBuffer)

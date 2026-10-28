@@ -63,7 +63,7 @@ namespace UnityAtoms
         private AtomConditionOperators _operator = AtomConditionOperators.And;
 
         [SerializeField]
-        private bool _replayEventBufferOnRegister = true;
+        private bool _replayEventBufferOnRegister = false;
 
         private void OnEnable()
         {
