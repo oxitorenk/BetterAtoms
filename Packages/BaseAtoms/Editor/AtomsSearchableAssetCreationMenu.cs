@@ -73,7 +73,7 @@ namespace UnityAtoms.Editor
             private readonly StringTree<Type> _list;
             private readonly Action<Type> _func;
 
-            private readonly List<Type> _lookup = new List<Type>();
+            private readonly Dictionary<AdvancedDropdownItem, Type> _lookup = new Dictionary<AdvancedDropdownItem, Type>();
 
             public Vector2 MinimumSize
             {
@@ -90,15 +90,17 @@ namespace UnityAtoms.Editor
             protected override void ItemSelected(AdvancedDropdownItem item)
             {
                 base.ItemSelected(item);
-                _func?.Invoke(_lookup[item.id]);
+                if (_lookup.TryGetValue(item, out var type))
+                    _func?.Invoke(type);
             }
 
             private void Render(StringTree<Type> tree, string key, AdvancedDropdownItem parentGroup)
             {
                 if (tree.Value != null)
                 {
-                    _lookup.Add(tree.Value);
-                    parentGroup.AddChild(new AdvancedDropdownItem(key) { id = _lookup.Count - 1 });
+                    var item = new AdvancedDropdownItem(key);
+                    _lookup.Add(item, tree.Value);
+                    parentGroup.AddChild(item);
                 }
                 else
                 {
@@ -114,6 +116,7 @@ namespace UnityAtoms.Editor
 
             protected override AdvancedDropdownItem BuildRoot()
             {
+                _lookup.Clear();
                 var root = new AdvancedDropdownItem("Unity Atoms");
 
                 foreach (var subtree in _list.SubTrees)
